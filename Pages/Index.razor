@@ -1,0 +1,20 @@
+﻿@page "/"
+
+@inject NavigationManager NavigationManager
+
+@inject AuthService Auth
+
+@code{
+    protected override void OnInitialized()
+    {
+        if(Auth.IsSignedIn)
+        {
+            NavigationManager.NavigateTo("/home", replace:true);
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/signin", replace: true);
+        }
+    }
+}
+
