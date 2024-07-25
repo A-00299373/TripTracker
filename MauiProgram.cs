@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using TripTracker.ViewModels;
 
 namespace TripTracker
 {
@@ -27,6 +28,7 @@ namespace TripTracker
 
         private static void AddServices(IServiceCollection services)
         {
+            services.AddTransient<AppViewModel>();
             services.AddSingleton<DatabaseContext>()
                     .AddTransient<SeedDataService>();
 

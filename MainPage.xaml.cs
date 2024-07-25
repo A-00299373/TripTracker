@@ -1,10 +1,13 @@
-﻿namespace TripTracker
+﻿using TripTracker.ViewModels;
+
+namespace TripTracker
 {
     public partial class MainPage : ContentPage
     {
-        public MainPage()
+        public MainPage(AppViewModel viewModel)
         {
             InitializeComponent();
+            BindingContext = viewModel;
         }
     }
 }

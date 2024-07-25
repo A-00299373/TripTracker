@@ -1,15 +1,11 @@
 ﻿@page "/signin"
+@layout AuthLayout 
 
-<div class="vh-100 100-vw p-3 d-flex flex-column justify-content-center align-items-center">
-    <div class="">
-        <img class="mx-auto logo" src="/images/mountain.png" alt="logo" />
-        <h3 class="m-2">TripTracker</h3>
-    </div>
+@inject AuthService AuthService
 
-    <EditForm Model="_model">
-        @* <DataAnnotationsValidator>
+    <EditForm Model="_model" OnValidSubmit="SigninAsync">
 
-        </DataAnnotationsValidator> *@
+        <DataAnnotationsValidator/> 
         <div class="card border-0 shadow-sm">
             <div class="card-body text-center">
                 <h4>Welcome back</h4>
@@ -30,15 +26,30 @@
             </div>
         </div>
     </EditForm>
-</div>
 
 @code {
     private SigninModel _model = new();
+
+    private async Task SigninAsync()
+    {
+        try
+        {
+            var result = await AuthService.SigninAsync(_model);
+            if (result.IsSuccess)
+            {
+                //Redierct user to home page
+            }
+            else
+            {
+                //Show error alert
+            }
+        }
+        catch(Exception ex)
+        {
+            
+        }
+
+    }
 }
 
-<style type="text/css" scoped>
-    .logo {
-        height: 100px;
-        width: 100px;
-    }
-</style>
+
