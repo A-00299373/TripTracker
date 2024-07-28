@@ -15,4 +15,3 @@ namespace TripTracker.Models
         public string ToJson() => JsonSerializer.Serialize(this);
     }
 }
---

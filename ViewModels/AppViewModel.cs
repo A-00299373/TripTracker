@@ -12,16 +12,19 @@ namespace TripTracker.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         public bool _isBusy;
-        public bool IsBusy {
-            get => _isBusy; 
-            set
+        public bool IsBusy
+        {
+            get => _isBusy;
+            private set
             {
-                if(_isBusy != value)
+                if (_isBusy != value)
                 {
                     _isBusy = value;
                     PropertyChanged?.Invoke(this, new
                         PropertyChangedEventArgs(nameof(IsBusy)));
                 }
             }
+        }
+        public void ToggleIsBusy(bool isBusy) => IsBusy = isBusy;
     }
 }

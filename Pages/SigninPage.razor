@@ -2,6 +2,7 @@
 @layout AuthLayout 
 
 @inject AuthService AuthService
+@inject MauiInterop Maui
 
     <EditForm Model="_model" OnValidSubmit="SigninAsync">
 
@@ -32,8 +33,10 @@
 
     private async Task SigninAsync()
     {
+        Maui.ShowLoader();
         try
         {
+            await Task.Delay(5000);
             var result = await AuthService.SigninAsync(_model);
             if (result.IsSuccess)
             {
@@ -42,11 +45,12 @@
             else
             {
                 //Show error alert
+                Maui.HideLoader();
             }
         }
         catch(Exception ex)
         {
-            
+            Maui.HideLoader();
         }
 
     }
