@@ -8,6 +8,12 @@ using System.Threading.Tasks;
 
 namespace TripTracker.Data
 {
+    /// <summary>
+    /// Provides a context for database operations in the TripTracker application.
+    /// This class handles the creation, retrieval, updating, and deletion of data in the SQLite database.
+    /// It includes methods to interact with tables, manage connections, and ensure data integrity.
+    /// The class is crucial for data persistence and management within the app.
+    /// </summary>
     public class DatabaseContext : IAsyncDisposable
     {
         private const string DbName = "TripTrackerManager.db3";

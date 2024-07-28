@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace TripTracker.Data
 {
+    /// <summary>
+    /// Represents a user in the TripTracker system.
+    /// This model includes the user's unique identifier (Id), name (Name),
+    /// username (Username), and password (Password). It is used for managing
+    /// user information, authentication, and access control within the app.
+    /// </summary>
     public class User
     {
         [PrimaryKey, AutoIncrement]

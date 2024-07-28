@@ -4,6 +4,13 @@ using MaxLengthAttribute = System.ComponentModel.DataAnnotations.MaxLengthAttrib
 
 namespace TripTracker.Data
 {
+    /// <summary>
+    /// Represents an expense record within the TripTracker application.
+    /// This model includes details such as the unique identifier (Id), associated trip (TripId),
+    /// purpose of the expense (For), amount spent (Amount), category of the expense (Category),
+    /// and the date when the expense was made (SpentOn). It is used to track and manage
+    /// financial data related to trips.
+    /// </summary>
     public class Expense
     {
         [PrimaryKey, AutoIncrement]
