@@ -1,6 +1,8 @@
 ﻿@page "/signin"
 @layout AuthLayout 
 
+@inject NavigationManager NavigationManager
+
 @inject AuthService AuthService
 @inject MauiInterop Maui
 
@@ -41,15 +43,18 @@
             if (result.IsSuccess)
             {
                 //Redierct user to home page
+                NavigationManager.NavigateTo("/home", replace: true);
             }
             else
             {
                 //Show error alert
+                await Maui.ShowErrorAlertAsync(result.Error ?? "Error in signing in");
                 Maui.HideLoader();
             }
         }
         catch(Exception ex)
         {
+            await Maui.ShowErrorAlertAsync(ex.Message);
             Maui.HideLoader();
         }
 
