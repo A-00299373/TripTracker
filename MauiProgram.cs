@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.Maui;
+using Microsoft.Extensions.Logging;
 using TripTracker.ViewModels;
 
 namespace TripTracker
@@ -13,7 +14,8 @@ namespace TripTracker
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                });
+                })
+                .UseMauiCommunityToolkit();
 
             builder.Services.AddMauiBlazorWebView();
 

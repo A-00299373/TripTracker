@@ -29,6 +29,7 @@
             </div>
         </div>
     </EditForm>
+<p class="text-end mt-3">New to TripTracker? <NavLink href="/signup">Sign Up</NavLink></p>
 
 @code {
     private SigninModel _model = new();
@@ -49,12 +50,14 @@
             {
                 //Show error alert
                 await Maui.ShowErrorAlertAsync(result.Error ?? "Error in signing in");
-                Maui.HideLoader();
             }
         }
         catch(Exception ex)
         {
             await Maui.ShowErrorAlertAsync(ex.Message);
+        }
+        finally
+        {
             Maui.HideLoader();
         }
 

@@ -1,7 +1,70 @@
 ﻿@page "/signup"
+@layout AuthLayout
 
-<h3>Signup</h3>
+@inject NavigationManager NavigationManager
+
+@inject AuthService AuthService
+@inject MauiInterop Maui
+
+<EditForm Model="_model" OnValidSubmit="SignupAsync">
+
+    <DataAnnotationsValidator />
+    <div class="card border-0 shadow-sm">
+        <div class="card-body text-center">
+            <h4>Hello</h4>
+            <p class="text-muted">Sign-Up to TripTracker</p>
+            <div class="vstack text-start">
+                <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <InputText @bind-Value="_model.Name" placeholder="Enter Name" class="form-control rounded-pill fs-6" />
+                    <ValidationMessage For="() => _model.Name" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <InputText @bind-Value="_model.Username" placeholder="Enter Username" class="form-control rounded-pill fs-6" />
+                    <ValidationMessage For="() => _model.Username" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <InputText @bind-Value="_model.Password" type="password" placeholder="Enter Password" class="form-control rounded-pill fs-6" />
+                    <ValidationMessage For="() => _model.Password" />
+                </div>
+                <button type="submit" class="btn btn-primary rounded-pill">Sign-Up</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+<p class="text-end mt-3">Already have an account<NavLink href="/signin">Sign In</NavLink></p>
+
 
 @code {
+    private SignupModel _model = new();
 
+    private async Task SignupAsync()
+    {
+        Maui.ShowLoader();
+        try
+        {
+            await Task.Delay(5000);
+            var result = await AuthService.SignupAsync(_model);
+            if (result.IsSuccess)
+            {
+                //Redierct user to home page
+                NavigationManager.NavigateTo("/home", replace: true);
+            }
+            else
+            {
+                //Show error alert
+                await Maui.ShowErrorAlertAsync(result.Error ?? "Error in signing up");
+            }
+        }
+        catch (Exception ex)
+        {
+            await Maui.ShowErrorAlertAsync(ex.Message);
+        }
+        finally
+        {
+            Maui.HideLoader();
+        }
+    }
 }
