@@ -31,7 +31,8 @@ namespace TripTracker
         private static void AddServices(IServiceCollection services)
         {
             services.AddTransient<AppViewModel>()
-                    .AddSingleton<MauiInterop>();
+                    .AddSingleton<MauiInterop>()
+                    .AddSingleton<AppState>();
 
             services.AddSingleton<DatabaseContext>()
                     .AddTransient<SeedDataService>();
