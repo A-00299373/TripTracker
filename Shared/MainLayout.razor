@@ -1,3 +1,36 @@
 ﻿@inherits LayoutComponentBase
 
-@Body
+@inject MauiInterop Maui
+
+<div class="w-100 position-fixed p-3 mb-3 bg-white shadow-sm top-navbar">
+    <div class="hstack gap-3">
+        <h3 class="m-0 w-100 @(Maui.IsIOS ? "text-center" : "text-start")">
+            TripTracker Manager
+        </h3>
+        <i class="fa-regular fa-user"></i>
+    </div>
+</div>
+
+<div class="body-content">
+    @Body
+</div>
+
+<div class="d-flex justify-content-center w-100">
+    <div class="d-flex justify-content-between align-items-center vw-90 p-2 mx-1 my-2 bg-success bg-gradient position-fixed rounded-pill shadow-lg bottom-tabbar">
+        <label class="rounded-pill px-3 py-1 text-white m-0 d-flex flex-column align-items-center">
+            <i class="bx bx-home m-0 p-0"></i>
+            <span class="">Home</span>
+        </label>
+        <label class="rounded-pill px-3 py-1 text-white m-0 d-flex flex-column align-items-center">
+            <i class="bx bx-food-menu m-0 p-0"></i>
+            <span class="">Trips</span>
+        </label>
+        <label class="rounded-pill px-3 py-1 text-white m-0 d-flex flex-column align-items-center">
+            <i class="bx bx-plus-circle bx-md m-0 p-0"></i>
+        </label>
+        <label class="rounded-pill px-3 py-1 text-white m-0 d-flex flex-column align-items-center">
+            <i class="bx bx-cog m-0 p-0"></i>
+            <span class="">Settings</span>
+        </label>
+    </div>
+</div>

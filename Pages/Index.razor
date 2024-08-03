@@ -3,10 +3,12 @@
 @inject NavigationManager NavigationManager
 
 @inject AuthService Auth
+@inject MauiInterop Maui
 
 @code{
     protected override void OnInitialized()
     {
+        Maui.HideLoader();
         if(Auth.IsSignedIn)
         {
             NavigationManager.NavigateTo("/home", replace:true);

@@ -22,5 +22,9 @@ namespace TripTracker
 
         public async Task ShowSuccessAlertAsync(string message, string? title = "Success") =>
             await App.Current.MainPage.DisplayAlert(title, message, "Ok");
+
+        public bool IsAndroid => DeviceInfo.Current.Platform == DevicePlatform.Android;
+
+        public bool IsIOS => DeviceInfo.Current.Platform == DevicePlatform.iOS;
     }
 }
