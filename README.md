@@ -1,4 +1,5 @@
-Trip Tracker is a comprehensive travel expense management application that makes the process of tracking and managing your travel expenditures easy 
+## TripTracker 
+This is a comprehensive travel expense management application that makes the process of tracking and managing your travel expenditures easy 
 
 **Features**
 Authentication Service-The app has a secure sign-in and sign-up process to protect users's data. 
