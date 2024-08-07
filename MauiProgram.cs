@@ -38,7 +38,8 @@ namespace TripTracker
                     .AddTransient<SeedDataService>();
 
             services.AddTransient<AuthService>()
-                    .AddTransient<DropdownsService>();
+                    .AddTransient<DropdownsService>()
+                    .AddSingleton<TripsService>();
         }
     }
 }
