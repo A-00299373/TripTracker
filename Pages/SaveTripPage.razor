@@ -1,13 +1,17 @@
 ﻿@page "/trips/add"
 
+@layout InnerPagesLayout
+
+@inject NavigationManager NavigationManager
+
 @inject MauiInterop Maui
 @inject DropdownsService Dropdowns
-
-<h3>Save Trip</h3>
+@inject TripsService TripssService
+@inject AppState AppState
 
 <div class="img-container m-0 p-0 vw-100"></div>
 
-<EditForm Model="_model">
+<EditForm Model="_model" OnValidSubmit="SaveTripAsync">
     <DataAnnotationsValidator />
     <div class="form-container">
         <div class="form-body bg-white shadow d-flex flex-column">
@@ -36,7 +40,7 @@
                         }
                         <ValidationMessage For="() => _model.CategoryImage" />
 
-                    </div>
+                    
                 </div>
             </div>
             <div class="mb-3">
@@ -77,18 +81,21 @@
                     }
                 </InputSelect>
 
-                <ValidationMessage For="() => _model.DisplayStatus" />
+                <ValidationMessage For="() => _model.Status" />
             </div>
+            </div>
+
+            <ValidationSummary />
             <div class="row my-3">
                 <div class="col-1"></div>
                 <div class="col-2">
-                    <button type="button" class="btn btn-outline-danger shadow">
+                    <button type="button" class="btn btn-outline-danger shadow" @onclick="() => NavigationManager.GoBack()">
                         <i class="bx bx-x"></i>
                     </button>
                 </div>
                 <div class="col-1"></div>
                 <div class="col-7">
-                    <button type="button" class="btn btn-primary rounded-pill shadow">Save Trip</button>
+                    <button type="submit" class="btn btn-primary rounded-pill shadow">Save Trip</button>
                 </div>
                 <div class="col-1"></div>
             </div>
@@ -97,12 +104,14 @@
 </EditForm>
 
 @code {
-        Trip _model = new();
+    Trip _model = new();
 
-private LocationCategory[] _locationCategories = Array.Empty<LocationCategory>();
+    private LocationCategory[] _locationCategories = Array.Empty<LocationCategory>();
     private string[] _statuses = Array.Empty<string>();
+
     protected override async Task OnInitializedAsync()
     {
+        AppState.SetInnerPageTitle("Add a trip");
         Maui.ShowLoader();
         _locationCategories = await Dropdowns.GetLocationCategoriesAsync();
         _statuses = Dropdowns.GetTripStatuses();
@@ -113,7 +122,34 @@ private LocationCategory[] _locationCategories = Array.Empty<LocationCategory>()
     {
         if (_model.CategoryImage == category.Image)
             _model.CategoryImage = string.Empty;
-        _model.CategoryImage = category.Image;
+        else
+            _model.CategoryImage = category.Image;
+    }
+
+    private async Task SaveTripAsync()
+    {
+        Maui.ShowLoader();
+        try
+        {
+            var result = await TripssService.SaveTripAsync(_model);
+            if (result.IsSuccess)
+            {
+                await Maui.ShowToastAsync("Trip saved");
+                NavigationManager.GoBack();
+            }
+            else
+            {
+                await Maui.ShowErrorAlertAsync(result.Error ?? "Error while saving trip");
+            }
+        }
+        catch (Exception ex)
+        {
+            await Maui.ShowErrorAlertAsync(ex.Message);
+        }
+        finally
+        {
+            Maui.HideLoader();
+        }
     }
 }
 
@@ -123,25 +159,26 @@ private LocationCategory[] _locationCategories = Array.Empty<LocationCategory>()
         background-position-y: -100px;
         height: 250px;
     }
-    .form-container{
+
+    .form-container {
         background-color: transparent;
         margin-top: -200px;
         padding: 25px 10px;
     }
 
-    .form-body{
+    .form-body {
         background-color: white;
         border-radius: 40px 40px 0 0;
         min-height: calc(100vh - 200px);
         padding: 15px;
     }
 
-    .category-img{
+    .category-img {
         width: 25px;
         height: 25px;
     }
 
-    .category-label{
+    .category-label {
         font-size: 12px;
     }
 </style>
