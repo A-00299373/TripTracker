@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunityToolkit.Maui.Alerts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,5 +27,8 @@ namespace TripTracker
         public bool IsAndroid => DeviceInfo.Current.Platform == DevicePlatform.Android;
 
         public bool IsIOS => DeviceInfo.Current.Platform == DevicePlatform.iOS;
+
+        public async Task ShowToastAsync(string message)=>
+        await Toast.Make(message, CommunityToolkit.Maui.Core.ToastDuration.Short).Show(); 
     }
 }
