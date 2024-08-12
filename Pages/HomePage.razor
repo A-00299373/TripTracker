@@ -1,12 +1,70 @@
 ﻿@page "/home"
-@inject AppState AppState
 
-<h3>HomePage</h3>
+@inject NavigationManager NavigationManager
+@inject MauiInterop Maui
+@inject AppState AppState
+@inject TripsService TripsService
+
+<div class="vw-100 opacity-75">
+    <img src="/images/home-beach-image.jpg" class="img-fluid"/>
+</div>
+
+<div class="container-fluid my-3 p-2">
+    <div class="d-flex justify-content-between align-items-center w-100">
+        <h4 class="m-0">Recent trips</h4>
+        <label class="bg-light text-dark rounded-pill p-0 px-2 py-1 m-0 d-flex align-items-center" @onclick="GoToAddTripPage">
+            <i class="bx bx-plus text-dark m-0 p-0"></i>
+            <span class="text-dark">Add a trip</span>
+        </label>
+    </div>
+
+    @if(!_trips.Any())
+    {
+        <div class="empty-trips-container min-vh-50 d-flex w-100 flex-column align-items-center justify-content-center">
+            <label class="text-muted fs-4 mb-2">You haven't added any trip yet'</label>
+            <button type="button" class="btn btn-secondary rounded-pill" @onclick="GoToAddTripPage">
+                <i class="bx bx-plus m-0 p-0"></i>
+                <span>Add a trip</span>
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="row mt-3">
+            @foreach (var trip in _trips)
+            {
+                <div class="col-6" @onclick="() => GoToSingleTripPage(trip.Id)">
+                    <div class="card mb-3">
+                        <img src="@trip.CategoryImage" class="card-img-top img-fluid" />
+                        <div class="card-body">
+                            <h6 class="card-title text-truncate">@trip.Title</h6>
+                            <p class="card-text fs-13 text-truncate">@trip.Location</p>
+                            </div>
+                        </div>
+                </div>
+            }
+        </div>
+    }
+</div>
 
 @code {
+    private IEnumerable<Trip> _trips = Enumerable.Empty<Trip>();
+
     protected override async Task OnInitializedAsync()
-{
-    AppState.SetSelectedMenuItem(AppConstants.MenuItems.Home);
+    {
+        AppState.SetSelectedMenuItem(AppConstants.MenuItems.Home);
+        Maui.ShowLoader();
+        _trips = await TripsService.GetTripsAsync(1, 6);
+        Maui.HideLoader();
+    }
+
+    private void GoToAddTripPage() => NavigationManager.GoToInnerPage("/trips/add");
+
+    private void GoToSingleTripPage(int tripId) => NavigationManager.GoToInnerPage($"/trips/{tripId}");
 }
-}
-    
+ 
+<style type="text/css" scoped>
+    .min-vh-50 {
+    min-height: 50vh;
+}    
+</style>

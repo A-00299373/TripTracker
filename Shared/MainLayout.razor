@@ -1,7 +1,11 @@
-﻿@inherits LayoutComponentBase
+﻿@using System.ComponentModel
+
+@inherits LayoutComponentBase
 
 @implements IDisposable
+
 @inject NavigationManager NavigationManager
+
 @inject MauiInterop Maui
 @inject AppState AppState
 
@@ -11,7 +15,7 @@
         <h3 class="m-0 w-100 @(Maui.IsIOS ? "text-center" : "text-start")">
             @AppState.PageTitle
         </h3>
-        <i class="fa-regular fa-user"></i>
+        <i class="bx bx-user-circle bx-sm text-dark"></i>
     </div>
 </div>
 
@@ -21,19 +25,19 @@
 
 <div class="d-flex justify-content-center w-100">
     <div class="d-flex justify-content-between align-items-center vw-90 p-2 mx-1 my-2 bg-success bg-gradient position-fixed rounded-pill shadow-lg bottom-tabbar">
-        <label class="rounded-pill px-3 py-1 text-white m-0 d-flex flex-column align-items-center" @onclick="() => GoToPage(AppConstants.MenuItems.Home)">
-            <i class="bx bx-home m-0 p-0"></i>
-            <span class="">Home</span>
+        <label class="rounded-pill px-3 py-1 text-white m-0 d-flex flex-column align-items-center @(IsHomeSelected ? "shadow-lg" : "light-white")" @onclick="() => GoToPage(AppConstants.MenuItems.Home)">
+            <i class="bx @(IsHomeSelected ? "bxs-home" : "bx-home") m-0 p-0"></i>
+            <span class="">Home</span> 
         </label>
-        <label class="rounded-pill px-3 py-1 text-white m-0 d-flex flex-column align-items-center" @onclick="() => GoToPage(AppConstants.MenuItems.Trips)">
-            <i class="bx bx-food-menu m-0 p-0"></i>
+        <label class="rounded-pill px-3 py-1 text-white m-0 d-flex flex-column align-items-center @(IsTripsSelected ? "shadow-lg" : "light-white")" @onclick="() => GoToPage(AppConstants.MenuItems.Trips)">
+            <i class="bx @(IsTripsSelected ? "bxs-food-menu" : "bx-food-menu") m-0 p-0"></i>
             <span class="">Trips</span>
         </label>
-        <label class="rounded-pill px-3 py-1 text-white m-0 d-flex flex-column align-items-center" @onclick="@(() => GoToInnerPage("/trips/add"))">
+        <label class="rounded-pill px-3 py-1 light-white m-0 d-flex flex-column align-items-center" @onclick="@(() => GoToInnerPage("/trips/add"))">
             <i class="bx bx-plus-circle bx-md m-0 p-0"></i>
         </label>
-        <label class="rounded-pill px-3 py-1 text-white m-0 d-flex flex-column align-items-center" @onclick="() => GoToPage(AppConstants.MenuItems.Settings)">
-            <i class="bx bx-cog m-0 p-0"></i>
+        <label class="rounded-pill px-3 py-1 text-white m-0 d-flex flex-column align-items-center @(IsSettingsSelected ? "shadow-lg" : "light-white")" @onclick="() => GoToPage(AppConstants.MenuItems.Settings)">
+            <i class="bx @(IsSettingsSelected ? "bxs-cog" : "bx-cog") m-0 p-0"></i>
             <span class="">Settings</span>
         </label>
     </div>
@@ -51,12 +55,21 @@
             [AppConstants.MenuItems.Settings] = "/settings"
         };
 
+    private bool IsHomeSelected => AppState.SelectedMenuItem == AppConstants.MenuItems.Home;
+    private bool IsTripsSelected => AppState.SelectedMenuItem == AppConstants.MenuItems.Trips;
+    private bool IsSettingsSelected => AppState.SelectedMenuItem == AppConstants.MenuItems.Settings;
+
+
     protected override void OnInitialized()
     {
-        AppState.SelectedMenuItemChanged += OnSelectedMenuItemChanged;
+        AppState.PropertyChanged += OnAppStatePropertyChanged;
     }
 
-    private void OnSelectedMenuItemChanged(object? sender, string selectedMenu) => StateHasChanged();
+    private void OnAppStatePropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if(e.PropertyName == nameof(AppState.SelectedMenuItem))
+            StateHasChanged();
+    }
 
     private void GoToPage(string pageName)
     {
@@ -65,12 +78,12 @@
 
     private void GoToInnerPage(string url)
     {
-        NavigationManager.NavigateTo(url);
+        NavigationManager.GoToInnerPage(url);
 
     }
 
     public void Dispose()
     {
-        AppState.SelectedMenuItemChanged -= OnSelectedMenuItemChanged;
+        AppState.PropertyChanged -= OnAppStatePropertyChanged;
     }
 }
