@@ -1,4 +1,5 @@
 ﻿//using AudioUnit;
+using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,31 +12,35 @@ namespace TripTracker.States
 {
     public class AppState : INotifyPropertyChanged
     {
-        //public event EventHandler<string> SelectedMenuItemChanged;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public string SelectedMenuItem { get; private set; } = AppConstants.MenuItems.Home;
-        public string PageTitle => SelectedMenuItem switch
-        {
-            AppConstants.MenuItems.Home => AppConstants.AppName,
-            _ => SelectedMenuItem
-        };
+        
 
         private string _innerPageTitle = string.Empty;
-        public string InnerPageTitle {
+        public string InnerPageTitle 
+        {
             get => _innerPageTitle;
             private set
             {
                 _innerPageTitle = value;
-                Notify(); 
+                Notify();
+                Notify(nameof(PageTitle));
             } 
         }
+
+        public string PageTitle => !string.IsNullOrEmpty(InnerPageTitle) ? InnerPageTitle : SelectedMenuItem switch
+        {
+            AppConstants.MenuItems.Home => AppConstants.AppName,
+            _ => SelectedMenuItem
+        };
 
         public void SetSelectedMenuItem(string pageName)
         {
             SelectedMenuItem = pageName;
             //SelectedMenuItemChanged?.Invoke(this, pageName);
             Notify(nameof(SelectedMenuItem));
+            Notify(nameof(PageTitle));
         }
 
         public void SetInnerPageTitle(string pageTitle)
@@ -43,7 +48,7 @@ namespace TripTracker.States
             InnerPageTitle = pageTitle;
         }
 
-        private void Notify([CallerMemberName]string propertyName = "")
+        private void Notify([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
