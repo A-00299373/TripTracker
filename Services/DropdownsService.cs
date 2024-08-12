@@ -20,6 +20,11 @@ namespace TripTracker.Services
         }
 
         public string[] GetTripStatuses() => Enum.GetNames<TripStatus>();
+
+        public async Task<string[]> GetExpenseCategoriesAsync() =>
+            (await _context.GetAllAsync<ExpenseCategory>())
+            .Select(c => c.Name)
+            .ToArray();
     }
 }
 
