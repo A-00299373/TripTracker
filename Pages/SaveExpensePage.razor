@@ -1,4 +1,5 @@
 ﻿@page "/trips/{tripId:int}/expenses/add"
+@page "/trips/{tripId:int}/{expenseId:long}/edit"
 
 @layout InnerPagesLayout
 
@@ -14,7 +15,7 @@
 <EditForm Model="_model" OnValidSubmit="SaveExpenseAsync">
     <DataAnnotationsValidator />
 
-    <FormContent Heading="Add Expense" ButtonText="Save Expense">
+    <FormContent Heading="@_title" ButtonText="Save Expense">
         <div class="mb-3">
             <label class="form-label">For what</label>
             <InputText @bind-Value="_model.For" class="form-control rounded-pill fs-6" placeholder="For what" />
@@ -49,15 +50,28 @@
     [Parameter]
     public int TripId { get; set; }
 
+    [Parameter]
+    public long? ExpenseId { get; set; }
+
     Expense _model = new();
 
     private string[] _expenseCategories = Array.Empty<string>();
 
+    private string _title = "Add Expense";
+
     protected override async Task OnInitializedAsync()
     {
-        AppState.SetInnerPageTitle("Add Expense");
+        AppState.NoTabbarItems();
         Maui.ShowLoader();
         _expenseCategories = await Dropdowns.GetExpenseCategoriesAsync();
+        if(ExpenseId.HasValue && ExpenseId > 0)
+        {
+            _title = "Edit Expense";
+            AppState.SetInnerPageTitle("Edit Expense"); 
+            _model = await TripssService.GetExpenseAsync(ExpenseId.Value); 
+        }
+        else
+            AppState.SetInnerPageTitle(_title);
         Maui.HideLoader();
         _model.TripId = TripId;
     }
