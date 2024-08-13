@@ -20,7 +20,7 @@ namespace TripTracker.Data
         [Required, MaxLength(100)]
         public string For { get; set;}
 
-        [Range(0.1, double.MaxValue)]
+        [Range(0.1, double.MaxValue, ErrorMessage = "Please enter valid amount.")]
         public double Amount { get; set; }
 
         [Required]

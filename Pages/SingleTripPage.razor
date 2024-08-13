@@ -10,6 +10,14 @@
 
 @if(_trip is not null)
 {
+    var statusColor = _trip.Status switch
+    {
+        TripStatus.Planned => "bg-secondary text-white",
+        TripStatus.Ongoing => "bg-success text-white",
+        TripStatus.Completed => "bg-primary text-white",
+        TripStatus.Cancelled => "bg-danger",
+        _ => "bg-dark"
+    };
     <div class="container-fluid m-0 p-0">
         <img src="@_trip.CategoryImage" class="img-fluid"/>
     </div>
@@ -17,7 +25,7 @@
         <div class="location bg-white shadow vw-95 px-3 py-2">
             <div class="d-flex justify-content-between align-items-center">
                 <h3>@_trip.Title</h3>
-                <span class="rounded-pill text-white m-0 px-2 fs-12">@_trip.DisplayStatus</span>
+                <span class="rounded-pill @statusColor text-dark m-0 px-2 fs-12">@_trip.DisplayStatus</span>
             </div>
             <div class="vstack">
                 <label class="m-0 px-2 py-1">
@@ -43,6 +51,41 @@
                 <span class="text-dark">Add expense</span>
             </label>
         </div>
+        @if (!_trip.Expenses.Any())
+        {
+            <div class="empty-trips-container d-flex w-100 flex-column align-items-center justify-content-center" style="min-height: 200px">
+                <label class="text-muted fs-4 mb-2">You haven't added any expense yet</label>
+                <button type="button" class="btn btn-secondary rounded-pill" @onclick=" GoToAddExpensePage">
+                    <i class="bx bx-plus m-0 p-0"></i>
+                    <span>Add expense</span>
+                </button>
+    </div>
+}
+        else
+        {
+            <div class="row mt-3">
+                @foreach (var expense in _trip.Expenses)
+                {
+                    <div class="col-12">
+                        <div class="card my-2 p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="vstack">
+                                    <h4>@expense.For <span class="badge bg-primary">@expense.Category</span></h4>
+                                    <label>
+                                        <i class="bx bx-calendar me-2"></i>
+                                        <span>@expense.SpentOn?.ToShortDateString()</span>
+                                    </label>
+                                </div>
+                                <h3>
+                                    @expense.Amount.ToString("c")
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        }
     </div>
 }
 
@@ -57,8 +100,9 @@
     protected override async Task OnInitializedAsync()
     {
         Maui.ShowLoader();
-        _trip = await TripsService.GetTripAsync(TripId);
+        _trip = await TripsService.GetTripAsync(TripId, includeExpenses: true);
         AppState.SetInnerPageTitle(_trip.Title);
+        _totalExpense = _trip.Expenses.Sum(e => e.Amount);
         Maui.HideLoader();
     }
 
@@ -67,3 +111,8 @@
         NavigationManager.GoToInnerPage($"/trips/{TripId}/expenses/add");
     }
 }
+<style type="text/css scoped">
+    .location {
+        border-radius: 20px;
+    }
+</style>

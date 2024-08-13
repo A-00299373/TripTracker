@@ -47,5 +47,9 @@ namespace TripTracker.Data
 
         [Ignore]
         public string DisplayStatus { get; set; }
+
+        [Ignore]
+        public IEnumerable<Expense> Expenses { get; set; }
+
     }
 }
