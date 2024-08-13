@@ -80,5 +80,7 @@ namespace TripTracker.Services
                 return MethodDataResult<Expense>.Fail(ex.Message);
             }
         }
+
+        public async Task<Expense?> GetExpenseAsync(long expenseId) => await _context.FindAsync<Expense>(expenseId);
     }
 }

@@ -51,5 +51,14 @@ namespace TripTracker.Data
         [Ignore]
         public IEnumerable<Expense> Expenses { get; set; }
 
-    }
+        [Ignore]
+        public string StatusBgColor => Status switch
+        {
+            TripStatus.Planned => "bg-secondary text-white",
+            TripStatus.Ongoing => "bg-success text-white",
+            TripStatus.Completed => "bg-primary text-white",
+            TripStatus.Cancelled => "bg-danger",
+            _ => "bg-dark"
+        };
+}
 }

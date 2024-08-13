@@ -29,6 +29,16 @@ namespace TripTracker.States
             } 
         }
 
+        public TabbarItem[] TabbarItems { get; set; } = Array.Empty<TabbarItem>();
+
+        public void AddTabbarItems(params TabbarItem[] tabbarItems)
+        {
+            TabbarItems = tabbarItems;
+            Notify(nameof(TabbarItems));
+        }
+
+        public void NoTabbarItems() => AddTabbarItems(Array.Empty<TabbarItem>());
+
         public string PageTitle => !string.IsNullOrEmpty(InnerPageTitle) ? InnerPageTitle : SelectedMenuItem switch
         {
             AppConstants.MenuItems.Home => AppConstants.AppName,
