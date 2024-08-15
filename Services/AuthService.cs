@@ -20,6 +20,8 @@ namespace TripTracker.Services
 
         public bool IsSignedIn => _preferences.ContainsKey(LoggedInKey);
 
+        public LoggedInUser CurrentUser => LoggedInUser.LoadFromJson(_preferences.Get<string>(LoggedInKey, string.Empty));
+
         public async Task<MethodResult> SignupAsync(SignupModel model)
         {
             var user = new User
@@ -56,6 +58,21 @@ namespace TripTracker.Services
         {
             var loggedInUSer = new LoggedInUser(user.Id, user.Name);
             _preferences.Set(LoggedInKey, loggedInUSer.ToJson());
+        }
+
+        public async Task ChnageNameAsync(string newName)
+        {
+            var dbUser = await _context.FindAsync<User>(CurrentUser.Id);
+            dbUser.Name = newName;
+            await _context.UpdateItemAsync(dbUser);
+            SetUser(dbUser);
+        }
+
+        public async Task ChangePasswordAsync(string newPassword)
+        {
+            var dbUser = await _context.FindAsync<User>(CurrentUser.Id);
+            dbUser.Password = newPassword;
+            await _context.UpdateItemAsync(dbUser);
         }
 
         public void SignOut()
