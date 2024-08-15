@@ -15,7 +15,16 @@
         <h3 class="m-0 w-100 @(Maui.IsIOS ? "text-center" : "text-start")">
             @AppState.PageTitle
         </h3>
-        <i class="bx bx-user-circle bx-sm text-dark"></i>
+        @* <i class="bx bx-user-circle bx-sm text-dark"></i> *@
+        @if(AppState.TabbarItems.Length > 0)
+        {
+            <label>
+                @foreach (var tabbarItem in AppState.TabbarItems)
+                {
+                    <i class="bx text-dark @tabbarItem.Icon" @onclick="@tabbarItem.OnTap"/>
+                }
+            </label>
+        }
     </div>
 </div>
 
@@ -67,7 +76,7 @@
 
     private void OnAppStatePropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if(e.PropertyName == nameof(AppState.SelectedMenuItem))
+        if(e.PropertyName == nameof(AppState.SelectedMenuItem) || e.PropertyName == nameof(AppState.TabbarItems))
             StateHasChanged();
     }
 
