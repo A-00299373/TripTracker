@@ -41,6 +41,15 @@ TripTracker is a comprehensive **travel expense management application** designe
 
 ---
 
+## 📸 Screenshots
+
+| Settings Screen | Home Screen | Trip Details | Add Trip |
+|-----------------|-------------|--------------|----------|
+| ![Settings](Picture1.png) | ![Home](Picture2.png) | ![Trip Details](Picture3.png) | ![Add Trip](Picture4.png) |
+
+
+---
+
 **Repository**: [TripTracker on GitHub](https://github.com/A-00299373/TripTracker)
 
 
